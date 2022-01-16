@@ -82,3 +82,27 @@ class InvestIntoProject(APIView):
                 "remaining_amount": investor.remaining_amount
             }
         )
+
+
+class MatchingProjects(generics.ListAPIView):
+    """List all matching projects for specific investor"""
+
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        investor = Investor.objects.get(id=self.kwargs.get('pk'))
+        return investor.matching_projects()
+
+
+class MatchingInvestors(generics.ListAPIView):
+    """List all matching investors for specific project"""
+
+    queryset = Project.objects.all()
+    serializer_class = InvestorSerializer
+
+    def get_queryset(self):
+        project = Project.objects.get(id=self.kwargs.get('pk'))
+        return project.matching_investors()
+    
+
